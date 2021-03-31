@@ -6,8 +6,8 @@ jobs:
       executor:
         name: node/default
       steps:
-        - run: yarn i
-        - run: yarn test
+        - run: npm install
+        - run: npm test
 workflows:
   build-and-test:
     jobs:
