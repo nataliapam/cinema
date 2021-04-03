@@ -39,23 +39,24 @@ jobs:
             sudo apt-get install -y awscli
             sudo apt-get install -y python-pip python-dev build-essential
       - run:
-         name: Build Project
-          command: npm install
+          name: Build Project
+          command: |
+            npm install
             npm run build
-           cd build
-           zip ../build.zip -r * .[^.]*
-           echo "Build successful"
+            cd build
+            zip ../build.zip -r * .[^.]*
+            echo "Build successful"
       - run:
-         name: Deploy to AWS S3
-         command: |
-           if ["${CURRENT_BRANCH}" =="master"]
-           then
-             aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_PROD} --delete
-           elif ["${CURRENT_BRANCH}" =="stage"]
-             aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_STAGE} --delete
-            else
-             aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_DEV} --delete
-            fi
+          name: Deploy to AWS S3
+          command: |
+            if ["${CURRENT_BRANCH}" =="master"]
+            then
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_PROD} --delete
+            elif ["${CURRENT_BRANCH}" =="stage"]
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_STAGE} --delete
+             else
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_DEV} --delete
+             fi
 
   deploy-to-cloudfront:
     docker:
