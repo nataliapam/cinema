@@ -48,14 +48,15 @@ jobs:
       - run:
           name: Deploy to AWS S3
           command: |
-            if ["${CURRENT_BRANCH}" =="master"]
+            if ["${CIRCLE_BRANCH}" =="master"]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_PROD} --delete
-            elif ["${CURRENT_BRANCH}" =="stage"]
+            elif ["${CIRCLE_BRANCH}" =="stage"]
+            then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_STAGE} --delete
-             else
+            else
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_DEV} --delete
-             fi
+            fi
   deploy-to-cloudfront:
     docker:
       - image: circleci/node:14.15.1
@@ -87,6 +88,7 @@ jobs:
             then
               aws cloudfront create-invalidation --distribution-id ${PROD_DISTRIBUTION_ID} --paths /\*
             elif ["${CIRCLE_BRANCH}" =="stage"]
+            then
               aws cloudfront create-invalidation --distribution-id ${STAGE_DISTRIBUTION_ID} --paths /\*
             else
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
