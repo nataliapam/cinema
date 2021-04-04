@@ -48,6 +48,7 @@ jobs:
       - run:
           name: Deploy to AWS S3
           command: |
+            echo "Deploying to AWS S3"
             if ["${CIRCLE_BRANCH}" == "master"]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_PROD_BUCKET} --delete
