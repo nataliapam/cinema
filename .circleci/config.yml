@@ -43,15 +43,15 @@ jobs:
             npm install
             npm run build
             cd build
-            zip ../build.zip -r * .[^.]*
+            zip ../build.zip -r *.[^.]*
             echo "Build successful"
       - run:
           name: Deploy to AWS S3
           command: |
-            if ["${CIRCLE_BRANCH}" =="master"]
+            if ["${CIRCLE_BRANCH}" == "master"]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_PROD} --delete
-            elif ["${CIRCLE_BRANCH}" =="stage"]
+            elif ["${CIRCLE_BRANCH}" == "stage"]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3:://${AWS_BUCKET_STAGE} --delete
             else
@@ -78,16 +78,16 @@ jobs:
           command: npm install
             npm run build
             cd build
-            zip ../build.zip -r * .[^.]*
+            zip ../build.zip -r *.[^.]*
             echo "Build successful"
       - run:
           name: Deploy to AWS Cloudfront
           command: |
             aws configure set preview.cloudfront
-            if ["${CIRCLE_BRANCH}" =="master"]
+            if ["${CIRCLE_BRANCH}" == "master"]
             then
               aws cloudfront create-invalidation --distribution-id ${PROD_DISTRIBUTION_ID} --paths /\*
-            elif ["${CIRCLE_BRANCH}" =="stage"]
+            elif ["${CIRCLE_BRANCH}" == "stage"]
             then
               aws cloudfront create-invalidation --distribution-id ${STAGE_DISTRIBUTION_ID} --paths /\*
             else
