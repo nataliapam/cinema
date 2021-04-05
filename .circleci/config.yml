@@ -106,9 +106,12 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-      - deploy-to-aws-s3:
+      - linting:
           requires:
             - build
+      - deploy-to-aws-s3:
+          requires:
+            - linting
       - deploy-to-cloudfront:
           requires:
             - deploy-to-aws-s3
